@@ -8,10 +8,11 @@ import subprocess
 HOST = '127.0.0.1'
 PORT = 28080
 
-if len(argv) == 0:
-    print("usage: %s [command]" % (sys.argv[0]))
+if len(sys.argv) == 1:
+    print("usage: python %s [command]" % (sys.argv[0]))
+    sys.exit(-1)
 else:
-    cmd = argv[1]
+    cmd = sys.argv[1]
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
