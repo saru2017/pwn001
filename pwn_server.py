@@ -21,6 +21,14 @@ while True:
     if pid == 0:
         print("run server")
         cmd = "python hello_world.py"
-#    cmd = "pwd"
+        os.dup2(con.fileno(), 0)
+        os.dup2(con.fileno(), 1)
+        os.dup2(con.fileno(), 2)
         subprocess.call(cmd.split())
+        con.close()
+        print("finished")
         sys.exit()
+        print("exit")
+    else:
+        con.close()
+
