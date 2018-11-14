@@ -2,10 +2,11 @@
 
 import socket
 import os
+import sys
 import subprocess
 
 HOST = '127.0.0.1'
-PORT = 8080
+PORT = 28080
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -18,6 +19,8 @@ while True:
     pid = os.fork()
 
     if pid == 0:
+        print("run server")
         cmd = "python hello_world.py"
 #    cmd = "pwd"
-subprocess.call(cmd.split())
+        subprocess.call(cmd.split())
+        sys.exit()
