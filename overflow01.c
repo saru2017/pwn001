@@ -6,6 +6,7 @@ void saru(){
   char buf[16];
   int secret = 0;
 
+
   gets(buf);
 
   if (secret == 0xaabbccdd){
