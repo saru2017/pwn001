@@ -7,7 +7,6 @@ void saru(){
   int dummy = 0x1234;
   int secret = 0;
 
-
   gets(buf);
 
   if (secret == 0xaabbccdd){
@@ -18,7 +17,7 @@ void saru(){
   }
 }
 
-int main(int argc, char **argv){
+int main(){
   saru();
 
   return 0;
