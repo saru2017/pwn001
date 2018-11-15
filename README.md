@@ -28,7 +28,7 @@ void saru(){
   }
 }
 
-int main(int argc, char **argv){
+int main(){
   saru();
 
   return 0;
@@ -182,10 +182,9 @@ import time
 
 
 def main():
-    buf = 'A' * 24
-    buf = buf.encode()
+    buf = b'A' * 24
     buf += b'\xdd\xcc\xbb\xaa'
-    buf += '\n'.encode() 
+    buf += b'\n'
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sock.connect(("localhost", 28080))
     time.sleep(1)
